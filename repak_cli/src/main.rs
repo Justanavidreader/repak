@@ -600,11 +600,6 @@ fn pack(key: EncryptionKey, args: ActionPack) -> Result<(), repak::Error> {
     let mut entries_sorted = entries;
     entries_sorted.sort_by(|a, b| a.0.cmp(&b.0));
 
-    eprintln!("DEBUG: Writing {} entries in sorted order:", entries_sorted.len());
-    for (i, (path, _)) in entries_sorted.iter().enumerate() {
-        eprintln!("  [{}] {}", i, path);
-    }
-
     // Write entries in sorted order
     for (path, entry) in entries_sorted {
         pak.write_entry(path, entry)?;
