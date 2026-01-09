@@ -58,3 +58,6 @@
 # OS files
 .DS_Store
 Thumbs.db
+
+# Utility scripts (local only, not tracked)
+/utils/
