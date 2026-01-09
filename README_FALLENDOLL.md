@@ -18,16 +18,55 @@ VFallenDoll is a PAK file format variant (version 11) that uses a custom AES-256
 
 ## Installation
 
-### Build from source:
+### Prerequisites:
+- **Rust 1.70+** - Install from [rust-lang.org](https://www.rust-lang.org/tools/install)
+- **Git** - Install from [git-scm.com](https://git-scm.com/downloads)
+- **Platform**: Windows, Linux, or macOS
+
+### Clone and Build:
+
 ```bash
+# Clone the repository with FallenDoll support branch
+git clone -b fallendoll-support https://github.com/Justanavidreader/repak.git
+cd repak
+
+# Build the release binary
 cargo build --release
+
+# Binary will be located at:
+# Windows: target/release/repak.exe
+# Linux/macOS: target/release/repak
 ```
 
-Binary location: `target/release/repak.exe`
+### Add to PATH (Optional):
 
-### Requirements:
-- Rust 1.70+
-- Windows/Linux/macOS
+**Windows (PowerShell):**
+```powershell
+# Add to current session
+$env:Path += ";$PWD\target\release"
+
+# Or copy to a directory already in PATH
+Copy-Item target\release\repak.exe C:\Windows\System32\
+```
+
+**Linux/macOS:**
+```bash
+# Add to PATH for current session
+export PATH="$PWD/target/release:$PATH"
+
+# Or install system-wide
+sudo cp target/release/repak /usr/local/bin/
+```
+
+### Verify Installation:
+
+```bash
+repak --version
+# Should output: repak 0.2.x
+
+repak --help
+# Should show --fallendoll flag in options
+```
 
 ## Usage
 

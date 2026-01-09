@@ -22,6 +22,16 @@ This fork adds **full read/write support for VFallenDoll encryption** - a custom
 - ✅ Simple `--fallendoll` CLI flag for all operations
 - ✅ Verified working in-game (Operation Lovecraft: Fallen Doll - UE 5.5)
 
+**Installation:**
+```bash
+# Clone this fork with FallenDoll support
+git clone -b fallendoll-support https://github.com/Justanavidreader/repak.git
+cd repak
+cargo build --release
+
+# Binary: target/release/repak.exe (Windows) or target/release/repak (Linux/macOS)
+```
+
 **Quick Usage:**
 ```bash
 # Extract VFallenDoll PAK
@@ -39,7 +49,7 @@ repak pack --version VFallenDoll --compression Zlib \
   input_dir Pak1_repacked.pak
 ```
 
-**📖 Full Documentation:** See [`README_FALLENDOLL.md`](README_FALLENDOLL.md) for complete usage guide, troubleshooting, and technical details.
+**📖 Full Documentation:** See [`README_FALLENDOLL.md`](README_FALLENDOLL.md) for detailed installation, usage guide, troubleshooting, and technical details.
 
 ## cli
 ```console
