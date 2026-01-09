@@ -27,10 +27,15 @@ This fork adds **full read/write support for VFallenDoll encryption** - a custom
 # Extract VFallenDoll PAK
 repak --fallendoll unpack Pak1.pak output_dir
 
-# Repack with VFallenDoll encryption
+# Repack with VFallenDoll encryption (manual parameters)
 repak pack --version VFallenDoll --compression Zlib \
   --mount-point "../../../Game/" \
   --path-hash-seed 123456789 \
+  input_dir Pak1_repacked.pak
+
+# OR use --reference to auto-extract mount_point and path_hash_seed
+repak pack --version VFallenDoll --compression Zlib \
+  --reference Pak1.pak \
   input_dir Pak1_repacked.pak
 ```
 

@@ -104,6 +104,10 @@ struct ActionPack {
     #[arg(short, long, default_value = "0")]
     path_hash_seed: u64,
 
+    /// Reference PAK file to extract mount_point and path_hash_seed from
+    #[arg(short = 'r', long)]
+    reference: Option<String>,
+
     /// Verbose
     #[arg(short, long, default_value = "false")]
     verbose: bool,
@@ -486,6 +490,35 @@ fn pack(key: EncryptionKey, args: ActionPack) -> Result<(), repak::Error> {
         PathBuf::from(format!("{}.pak", args.input))
     });
 
+    // Extract mount_point and path_hash_seed from reference PAK if provided
+    let (mount_point, path_hash_seed) = if let Some(ref reference_path) = args.reference {
+        let mut reference_file = File::open(reference_path)?;
+        let mut reader_builder = repak::PakBuilder::new();
+
+        // Use FallenDoll key for VFallenDoll version, otherwise use provided key
+        if args.version == repak::Version::VFallenDoll {
+            reader_builder = reader_builder.fallendoll();
+        } else {
+            match &key {
+                EncryptionKey::Aes(aes_key) => reader_builder = reader_builder.key(aes_key.clone()),
+                EncryptionKey::FallenDoll => reader_builder = reader_builder.fallendoll(),
+                EncryptionKey::None => {}
+            }
+        }
+
+        let reference_pak = reader_builder.reader(&mut reference_file)?;
+        let ref_mount_point = reference_pak.mount_point().to_string();
+        let ref_path_hash_seed = reference_pak.path_hash_seed();
+
+        println!("Extracted from reference PAK:");
+        println!("  Mount point: {}", ref_mount_point);
+        println!("  Path hash seed: {:?}", ref_path_hash_seed);
+
+        (ref_mount_point, ref_path_hash_seed)
+    } else {
+        (args.mount_point.clone(), Some(args.path_hash_seed))
+    };
+
     fn collect_files(paths: &mut Vec<PathBuf>, dir: &Path) -> io::Result<()> {
         for entry in fs::read_dir(dir)? {
             let entry = entry?;
@@ -526,8 +559,8 @@ fn pack(key: EncryptionKey, args: ActionPack) -> Result<(), repak::Error> {
         .writer(
             BufWriter::new(File::create(&output)?),
             args.version,
-            args.mount_point,
-            Some(args.path_hash_seed),
+            mount_point,
+            path_hash_seed,
         );
 
     use indicatif::ProgressIterator;

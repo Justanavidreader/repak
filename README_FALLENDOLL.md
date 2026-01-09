@@ -87,6 +87,8 @@ repak pack --version VFallenDoll --mount-point "../../../Paralogue/" ...
 
 ## Finding PAK Parameters
 
+### Option 1: Manual (info command)
+
 To get the correct `--path-hash-seed` and `--mount-point` from an existing PAK:
 
 ```bash
@@ -98,6 +100,31 @@ Output:
 mount point: ../../../Paralogue/Config/
 path hash seed: Some(3C87E9DF)  # Use decimal: 1015540191
 ```
+
+### Option 2: Automatic (--reference flag)
+
+**NEW**: Use `--reference` to automatically extract mount point and path hash seed:
+
+```bash
+# Instead of manually specifying parameters:
+repak pack --version VFallenDoll --compression Zlib \
+  --mount-point "../../../Paralogue/" \
+  --path-hash-seed 3720564556 \
+  extracted/ output.pak
+
+# Use --reference to extract them automatically:
+repak pack --version VFallenDoll --compression Zlib \
+  --reference original.pak \
+  extracted/ output.pak
+```
+
+The `--reference` flag will:
+- Open the reference PAK
+- Extract `mount_point` and `path_hash_seed`
+- Use those values automatically
+- Print extracted values for verification
+
+**Note**: When using `--reference`, you don't need to specify `--mount-point` or `--path-hash-seed` manually. They will be ignored if the reference is provided.
 
 ## Technical Details
 

@@ -1,2 +1,60 @@
-*target/
-/repak/tests/config.sh
+# Build outputs
+/target/
+**/*.rs.bk
+
+# Test PAK files (root directory only, not test fixtures)
+/*.pak
+
+# Extracted/test directories (root only)
+/pak*_clean/
+/pak*_extracted/
+/pak*_roundtrip/
+/test_extract*/
+/test_minimal/
+/test_pack/
+
+# Temporary analysis files (root only)
+/*.bin
+/original_*.txt
+/repacked_*.txt
+/extracted_*.ini
+/original_*.ini
+/repacked_*.ini
+/test_*.txt
+/test_*.ini
+/test_*.uproject
+/test_*.uplugin
+/ttables_*.txt
+/*_test_vectors.txt
+/index_*.bin
+/*_index_encrypted.bin
+/*_phi_encrypted.bin
+
+# Debug/analysis markdown (root only)
+/ENCRYPTION_BUG_ANALYSIS.md
+/ENCRYPTION_DIAGNOSTIC_SUMMARY.txt
+/ENCRYPTION_IMPLEMENTATION.md
+/ENCRYPT_FIX_GUIDE.md
+/PAK_STRUCTURE_ANALYSIS.md
+/VDENUVO_IMPLEMENTATION_PLAN.md
+/REPACKING_GUIDE.md
+
+# Temporary scripts (root only)
+/dump_index.exe
+/analyze_pak.rs
+/dump_index_rust.rs
+/*.pdb
+
+# Backup files
+*.old
+*.backup
+
+# Utility scripts (keep in utils/ but ignore in root)
+/repack_*.bat
+/test_in_game.bat
+/*.py
+/*.sh
+
+# OS files
+.DS_Store
+Thumbs.db
