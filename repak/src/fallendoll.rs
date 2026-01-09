@@ -383,14 +383,18 @@ impl FallenDollCipher {
     }
 
     /// Decrypt data in-place (must be multiple of 16 bytes)
-    pub fn decrypt(&self, data: &mut [u8]) {
-        assert!(data.len() % 16 == 0, "Data length must be multiple of 16");
+    pub fn decrypt(&self, data: &mut [u8]) -> Result<(), super::Error> {
+        if data.len() % 16 != 0 {
+            return Err(super::Error::InvalidBlockSize(data.len()));
+        }
 
         for chunk in data.chunks_exact_mut(16) {
             let block: [u8; 16] = chunk.try_into().unwrap();
             let decrypted = self.decrypt_block(&block);
             chunk.copy_from_slice(&decrypted);
         }
+
+        Ok(())
     }
 }
 
@@ -808,32 +812,50 @@ const TE1: [u32; 256] = generate_te1_a();
 const TE2: [u32; 256] = generate_te2_a();
 const TE3: [u32; 256] = generate_te3_a();
 
+// Test-only T-table variants for cipher validation
+#[cfg(test)]
 /// Variant B tables (Standard AES coefficients)
 const TE0_B: [u32; 256] = generate_te0_b();
+#[cfg(test)]
 const TE1_B: [u32; 256] = generate_te1_b();
+#[cfg(test)]
 const TE2_B: [u32; 256] = generate_te2_b();
+#[cfg(test)]
 const TE3_B: [u32; 256] = generate_te3_b();
 
+#[cfg(test)]
 /// Variant C tables
 const TE0_C: [u32; 256] = generate_te0_c();
+#[cfg(test)]
 const TE1_C: [u32; 256] = generate_te1_c();
+#[cfg(test)]
 const TE2_C: [u32; 256] = generate_te2_c();
+#[cfg(test)]
 const TE3_C: [u32; 256] = generate_te3_c();
 
+#[cfg(test)]
 /// Variant D tables
 const TE0_D: [u32; 256] = generate_te0_d();
+#[cfg(test)]
 const TE1_D: [u32; 256] = generate_te1_d();
+#[cfg(test)]
 const TE2_D: [u32; 256] = generate_te2_d();
+#[cfg(test)]
 const TE3_D: [u32; 256] = generate_te3_d();
 
+#[cfg(test)]
 /// Variant E tables (Denuvo-specific: [03, 01, 01, 02] derived from InvMixColumns [09, 0D, 0B, 0E])
 const TE0_E: [u32; 256] = generate_te0_e();
+#[cfg(test)]
 const TE1_E: [u32; 256] = generate_te1_e();
+#[cfg(test)]
 const TE2_E: [u32; 256] = generate_te2_e();
+#[cfg(test)]
 const TE3_E: [u32; 256] = generate_te3_e();
 
 impl FallenDollCipher {
     /// Test variant of encrypt that uses specified T-tables (for testing)
+    #[cfg(test)]
     pub fn encrypt_block_variant(&self, block: &[u8; 16], variant: u8) -> [u8; 16] {
         let (te0, te1, te2, te3) = match variant {
             0 => (&TE0, &TE1, &TE2, &TE3),
@@ -1232,13 +1254,18 @@ impl FallenDollCipher {
 
 
     /// Encrypt data in-place (must be multiple of 16 bytes)
-    pub fn encrypt(&self, data: &mut [u8]) {
-        assert!(data.len() % 16 == 0, "Data length must be multiple of 16");
+    pub fn encrypt(&self, data: &mut [u8]) -> Result<(), super::Error> {
+        if data.len() % 16 != 0 {
+            return Err(super::Error::InvalidBlockSize(data.len()));
+        }
+
         for chunk in data.chunks_exact_mut(16) {
             let block: [u8; 16] = chunk.try_into().unwrap();
             let encrypted = self.encrypt_block(&block);
             chunk.copy_from_slice(&encrypted);
         }
+
+        Ok(())
     }
 }
 

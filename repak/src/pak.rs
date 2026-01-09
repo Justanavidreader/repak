@@ -163,8 +163,7 @@ fn decrypt(key: &super::Key, bytes: &mut [u8]) -> Result<(), super::Error> {
             Ok(())
         }
         super::Key::FallenDoll(fallendoll_cipher) => {
-            fallendoll_cipher.decrypt(bytes);
-            Ok(())
+            fallendoll_cipher.decrypt(bytes)
         }
         super::Key::None => Err(super::Error::Encrypted),
         #[cfg(not(feature = "encryption"))]
@@ -183,8 +182,7 @@ fn encrypt(key: &super::Key, bytes: &mut [u8]) -> Result<(), super::Error> {
             Ok(())
         }
         super::Key::FallenDoll(fallendoll_cipher) => {
-            fallendoll_cipher.encrypt(bytes);
-            Ok(())
+            fallendoll_cipher.encrypt(bytes)
         }
         super::Key::None => Ok(()),
         #[cfg(not(feature = "encryption"))]

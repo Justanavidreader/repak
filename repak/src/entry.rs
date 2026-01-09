@@ -293,8 +293,6 @@ impl Entry {
                 if is_size_32_bit_safe { 4 } else { 8 }
             } else { 0 }) +
             (if will_write_blocks { block_count * 4 } else { 0 });
-        eprintln!("DEBUG ENCODE: uncompressed={} blocks={} will_write_blocks={} entry_size={} compressed_block_size_encoded=0x{:x} write_extra_block_size={}",
-            self.uncompressed, block_count, will_write_blocks, entry_size, compression_block_size, compression_block_size == 0x3f);
 
         assert!(
             compression_blocks_count < 0x10_000,
@@ -376,7 +374,7 @@ impl Entry {
                     }
                 }
                 super::Key::FallenDoll(fallendoll_cipher) => {
-                    fallendoll_cipher.decrypt(&mut data);
+                    fallendoll_cipher.decrypt(&mut data)?;
                 }
                 super::Key::None => {
                     return Err(super::Error::Encrypted);

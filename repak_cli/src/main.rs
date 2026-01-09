@@ -346,10 +346,20 @@ impl Output {
 }
 
 fn unpack(key: EncryptionKey, action: ActionUnpack) -> Result<(), repak::Error> {
+    // Clone key once before loop to avoid repeated allocations
+    let key_for_builder = match &key {
+        EncryptionKey::Aes(aes_key) => Some(aes_key.clone()),
+        _ => None,
+    };
+
     for input in &action.input {
         let mut builder = repak::PakBuilder::new();
         match &key {
-            EncryptionKey::Aes(aes_key) => builder = builder.key(aes_key.clone()),
+            EncryptionKey::Aes(_) => {
+                if let Some(ref aes_key) = key_for_builder {
+                    builder = builder.key(aes_key.clone());
+                }
+            }
             EncryptionKey::FallenDoll => builder = builder.fallendoll(),
             EncryptionKey::None => {}
         }
@@ -597,11 +607,10 @@ fn pack(key: EncryptionKey, args: ActionPack) -> Result<(), repak::Error> {
         .collect::<Result<Vec<_>, _>>()?;
 
     // Sort entries by path to ensure consistent file order on disk
-    let mut entries_sorted = entries;
-    entries_sorted.sort_by(|a, b| a.0.cmp(&b.0));
+    entries.sort_by(|a, b| a.0.cmp(&b.0));
 
     // Write entries in sorted order
-    for (path, entry) in entries_sorted {
+    for (path, entry) in entries {
         pak.write_entry(path, entry)?;
     }
 

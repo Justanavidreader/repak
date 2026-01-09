@@ -73,6 +73,9 @@ pub enum Error {
     #[error("pak is encrypted but no key was provided")]
     Encrypted,
 
+    #[error("data length {0} is not a multiple of 16 bytes (required for block cipher)")]
+    InvalidBlockSize(usize),
+
     #[error("error with OsString")]
     OsString(std::ffi::OsString),
 
