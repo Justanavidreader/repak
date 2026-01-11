@@ -590,7 +590,7 @@ fn pack(key: EncryptionKey, args: ActionPack) -> Result<(), repak::Error> {
 
     // Build entries in parallel but collect them first
     let entry_builder = pak.entry_builder();
-    let entries: Vec<(String, _)> = iter
+    let mut entries: Vec<(String, _)> = iter
         .par_bridge()
         .map(|p| -> Result<(String, _), repak::Error> {
             let rel = p
